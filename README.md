@@ -3,7 +3,7 @@ School Project
 # Requirements
 <br>numpy~=1.19.5
 <br>keras~=2.6.0
-matplotlib~=3.4.3
+<br>matplotlib~=3.4.3
 <br>tensorflow~=2.6.0
 <br>PyQt5~=5.15.4
 <br>Pillow~=8.3.1
