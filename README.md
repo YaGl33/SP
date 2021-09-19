@@ -11,7 +11,9 @@ scipy~=1.7.1
 # Running
 <pre>
 git clone https://github.com/YaGl33/SP/
-cd SP</pre>
+cd SP
+pip install requirements.txt
+</pre>
 Draw your number
 <pre>
 python3 draw.py
