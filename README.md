@@ -12,7 +12,7 @@ School Project
 <pre>
 git clone https://github.com/YaGl33/SP/
 cd SP
-pip install requirements.txt
+pip3 install -r requirements.txt
 </pre>
 Draw your number
 <pre>
