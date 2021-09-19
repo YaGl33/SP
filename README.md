@@ -11,10 +11,11 @@ scipy~=1.7.1
 # Running
 <pre>
 git clone https://github.com/YaGl33/SP/
-cd SP
+cd SP</pre>
+Draw your number
+<pre>
 python3 draw.py
 </pre>
-Draw your number
 <pre>
 python3 resize.py
 python3 main.py
