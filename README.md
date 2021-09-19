@@ -15,8 +15,6 @@ cd SP</pre>
 Draw your number
 <pre>
 python3 draw.py
-</pre>
-<pre>
 python3 resize.py
 python3 main.py
 </pre>
