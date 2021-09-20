@@ -1,13 +1,14 @@
 import os
-import random
 import numpy as np  # numpy для вычислений
 import matplotlib.pyplot as plt
 from tensorflow.keras.datasets import mnist         # библиотека базы выборок Mnist
-from tensorflow import keras # машинное зрение
+from tensorflow import keras  # машинное зрение
 from tensorflow.keras.layers import Dense, Flatten
-from matplotlib.image import imread
 from PIL import Image
+import PIL.ImageOps
 
+os.system("python draw.py")
+os.system("python resize.py")
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
@@ -24,10 +25,13 @@ directory_path = directory.read()
 
 image = Image.open(directory_path)
 image = image.convert("L")
+image = PIL.ImageOps.invert(image)
 data = image.getdata()
 data = np.matrix(data)
 
+
 data = data / 255
+
 
 # image = image.reshape((28, 28, 3))
 # image = image.astype('float32') / 255
@@ -40,6 +44,7 @@ plt.show()
 model = keras.Sequential([  # модель нейронной сети
     Flatten(input_shape=(28, 28, 1)),  # первый слой
     Dense(128, activation='relu'),
+    Dense(1024, activation='relu'),
     Dense(10, activation='softmax')
 ])
 
