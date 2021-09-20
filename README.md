@@ -16,7 +16,5 @@ pip3 install -r requirements.txt
 </pre>
 Draw your number
 <pre>
-python3 draw.py
-python3 resize.py
 python3 main.py
 </pre>
