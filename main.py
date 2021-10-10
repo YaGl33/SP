@@ -81,3 +81,4 @@ res = model.predict(x)
 print(res)
 print( f"Распознанная цифра: {np.argmax(res)}" )
 
+
