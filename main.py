@@ -6,87 +6,78 @@ from tensorflow import keras  # машинное зрение
 from tensorflow.keras.layers import Dense, Flatten
 from PIL import Image
 import PIL.ImageOps
+from keras import models
+from keras import layers
+from tensorflow.keras.utils import to_categorical
 
 os.system("python draw.py")
 os.system("python resize.py")
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
+(train_images, train_labels), (test_images, test_labels) = mnist.load_data()
 
-(x_train, y_train), (x_test, y_test) = mnist.load_data()  # загрузка изображений для тестовой и тренировочной выборки
+train_images = train_images.reshape((60000, 28, 28, 1))
+train_images = train_images.astype('float32') / 255
 
-# стандартизация входных данных
-x_train = x_train / 255 # тренировочная выборка
-x_test = x_test / 255  # тестовая
+test_images = test_images.reshape((10000, 28, 28, 1))
+test_images = test_images.astype('float32') / 255
+
+train_labels = to_categorical(train_labels)
+test_labels = to_categorical(test_labels)
 
 directory = open('path.txt')
 directory_path = directory.read()
 # image = imread(directory_path)
 
-image = Image.open(directory_path)
-image = image.convert("L")
-image = PIL.ImageOps.invert(image)
-data = image.getdata()
-data = np.matrix(data)
-
-
-data = data / 255
-
-
-# image = image.reshape((28, 28, 3))
-# image = image.astype('float32') / 255
-
-y_train_cat = keras.utils.to_categorical(y_train, 10)
-y_test_cat = keras.utils.to_categorical(y_test, 10)
-
-plt.show()
-
-model = keras.Sequential([  # модель нейронной сети
-    Flatten(input_shape=(28, 28, 1)),  # первый слой
-    Dense(128, activation='relu'),
-    Dense(1024, activation='relu'),
-    Dense(10, activation='softmax')
-])
+model = models.Sequential()
+model.add(layers.Conv2D(32,
+                        (3, 3),
+                        activation='relu',
+                        input_shape=(28, 28, 1)))
+model.add(layers.MaxPooling2D((2, 2)))
+model.add(layers.Conv2D(64,
+                        (3, 3),
+                        activation='relu'))
+model.add(layers.MaxPooling2D((2, 2)))
+model.add(layers.Conv2D(64,
+                        (3, 3),
+                        activation='relu'))
+model.add(layers.Flatten())
+model.add(layers.Dense(64,
+                       activation='relu'))
+model.add(layers.Dense(10,
+                       activation='softmax'))
 
 print(model.summary())      # вывод структуры НС в консоль
 
-model.compile(optimizer='adam',
-             loss='categorical_crossentropy',
-             metrics=['accuracy'])
+model.compile(optimizer='rmsprop',
+              loss='categorical_crossentropy',
+              metrics=['accuracy'])
 
 
-model.fit(x_train, y_train_cat, batch_size=32, epochs=5, validation_split=0.2)
+model.fit(train_images,
+          train_labels,
+          epochs=5,
+          batch_size=64)
 
-model.evaluate(x_test, y_test_cat)
+model.evaluate(train_images, train_labels)
 
-n = 1
-x = np.expand_dims(data[0], axis=0)
-res = model.predict(x)
-print( res )
-print( np.argmax(res) )
-# Распознавание всей тестовой выборки
-pred = model.predict(data)
-pred = np.argmax(pred, axis=1)
+image = Image.open(directory_path)
+image = image.convert("L")
+image = PIL.ImageOps.invert(image)
 
-print(pred.shape)
+data = image.getdata()
+data = np.array(data)
 
-print(pred[:20])
-print(y_test[:20])
+data = data.reshape((1, 28, 28, 1))
+data = data.astype('float32') / 255
 
-# Выделение неверных вариантов
-mask = pred == y_test
-print(mask[:10])
-
-x_false = x_test[~mask]
-y_false = x_test[~mask]
-
-print(x_false.shape)
-
+plt.imshow(data[0], cmap=plt.cm.binary)
+plt.show()
 
 x = np.expand_dims(data[0], axis=0)
 res = model.predict(x)
 print(res)
 print( f"Распознанная цифра: {np.argmax(res)}" )
 
-plt.imshow(image, cmap=plt.cm.binary)
-plt.show()
